@@ -13,9 +13,9 @@
 	ResultSet rs = null;
 	int numberOfAccounts = 0;
 	
-	String sql = "SELECT COUNT(*) FROM MAKS216.USERS WHERE USER_USERNAME = ? AND USER_PASSWORD = ?";
-	String user = "maks216";
-	String password = "coltron4";
+	String sql = "SELECT COUNT(*) FROM MAKS202.SOCIAL_USERS WHERE USERNAME = ? AND PASS = ?";
+	String user = "maks202";
+	String password = "axle088";
 	String url = "jdbc:db2://130.184.26.148:446/ZUAF";
 	
 	try {

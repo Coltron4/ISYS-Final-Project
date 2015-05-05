@@ -35,8 +35,6 @@
 		<h2 class="form-signin-heading">Register your Account</h2>
 		<label for="txtName">Name: </label>
 		<input type="text" name="txtName" class="form-control">
-		<label for="txtEmail">Email Address: </label>
-		<input type="text" name="txtEmail" class="form-control">
 		<label for="txtUsername">Username: </label>
 		<input type="text" name="txtUsername" class="form-control">
 		<label for="txtPass1">Password: </label>

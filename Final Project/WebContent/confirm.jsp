@@ -6,7 +6,6 @@
 
 	//Insert record into DB2
 	String name		= request.getParameter("txtName");
-	String email	= request.getParameter("txtEmail");
 	String username	= request.getParameter("txtUsername");
 	String userPass	= request.getParameter("txtPass1");
 	
@@ -14,9 +13,9 @@
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
 	
-	String sql = "INSERT INTO MAKS216.USERS( USER_FULL_NAME, USER_EMAIL, USER_USERNAME, USER_PASSWORD) VALUES ( ?, ?, ?, ?)";
-	String user = "maks216";
-	String password = "coltron4";
+	String sql = "INSERT INTO MAKS202.SOCIAL_USERS( USERNAME, PASS, REAL_NAME ) VALUES ( ?, ?, ? )";
+	String user = "maks202";
+	String password = "axle088";
 	String url = "jdbc:db2://130.184.26.148:446/ZUAF";
 	
 	try {
@@ -29,10 +28,9 @@
 	try {
 		con = DriverManager.getConnection(url, user, password);
 		pstmt  = con.prepareStatement(sql);
-		pstmt.setString(1, name);
-		pstmt.setString(2, email);
-		pstmt.setString(3, username);
-		pstmt.setString(4, userPass);
+		pstmt.setString(1, username);
+		pstmt.setString(2, userPass);
+		pstmt.setString(3, name);
 		
 		pstmt.execute();
 		con.close();
