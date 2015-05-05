@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ page import="java.sql.*"  %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="edu.uark.isys.Post" %>
+
 <%
 	String username = (String)session.getAttribute("username");
 	if(username == null || username == "") {
@@ -85,8 +90,101 @@
 	  </form>
 	</div>
 
+	<!-- Get posts -->
+	<%
+
+	//Retrieve posts from DB2
+	Connection con = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+	ArrayList<String> following_set = null;
+	ArrayList<Post> posts = null;
+	
+	String following_sql = "SELECT * FROM MAKS202.SOCIAL_FOLLOWINGS WHERE USERNAME = ?";
+	String posts_sql = "SELECT * FROM MAKS202.SOCIAL_POSTS WHERE POSTER_USERNAME = ?";
+	String user = "maks202";
+	String password = "axle088";
+	String url = "jdbc:db2://130.184.26.148:446/ZUAF";
+	
+	try {
+		Class.forName("com.ibm.db2.jcc.DB2Driver");
+	} catch (Exception ex) {
+		ex.printStackTrace();
+		out.write("Error connecting to DB2... :( " );
+	}
+	
+	try {
+		con = DriverManager.getConnection(url, user, password);
+		
+		// Build list of people followed
+		following_set = new ArrayList<String>();
+		following_set.add(username);
+		
+		pstmt  = con.prepareStatement(following_sql);
+		pstmt.setString(1, username);		
+		rs = pstmt.executeQuery();
+		
+		if ( rs != null ) {
+			if (rs.next()) {
+				following_set.add(rs.getString(2));
+			}
+		}
+		
+		out.println("<p>Following_set size: " + following_set.size() + "</p>");
+		
+		// Retrieve posts from people followed
+		posts = new ArrayList<Post>();
+		
+		// Retrieve posts from each user
+		for(String following_user : following_set) {
+			pstmt = con.prepareStatement(posts_sql);
+			pstmt.setString(1, following_user);
+			
+			rs = pstmt.executeQuery();
+			
+			// Add all posts from user to list
+			while(rs.next()) {
+				Post post = new Post();
+				post.setUsername(rs.getString(1));
+				post.setPost_text(rs.getString(2));
+				post.setPost_date(rs.getDate(3));
+				
+				posts.add(post);
+			}
+		}
+		
+		out.println("<p>Posts size: " + posts.size() + "</p>");
+		
+		con.close();
+		
+	} catch(Exception ex) {
+		ex.printStackTrace();
+		out.write("Error doing something in DB2... :( " );
+	}
+%>
+
     <div class="container">
-      <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-8 blog-main">
+   		<%
+   		if(posts != null) {
+   			Collections.sort(posts);
+   			Collections.reverse(posts);
+   			
+   			// Output each post
+   			for(Post post : posts) {
+   				out.println("<div class=\"blog-post\">");
+   				out.println("<p class=\"blog-post-meta\">");
+   				out.println(post.getPost_date() + " by ");
+   				out.println("<a href=\"#\">" + post.getUsername() + "</a></p>");
+   				out.println("<p>" + post.getPost_text() + "</p></div>");
+   			}
+   		}
+   	
+   		%>
+   		</div>
+   	</div>
+      <!-- Example row of columns
       <div class="row">
         <div class="col-md-8 blog-main">
 
@@ -94,16 +192,16 @@
             <p class="blog-post-meta">May 1, 2015 by <a href="#">You</a></p>
 
             <p>Gah I just want to start my job already!</p>
-          </div><!-- /.blog-post -->
+          </div><!-- /.blog-post - ->
 
           <div class="blog-post">
             <p class="blog-post-meta">April 28, 2015 by <a href="#">johnDeere</a></p>
 
             <p>Imma mow you real good...</p>
-          </div><!-- /.blog-post -->
+          </div><!-- /.blog-post - ->
 
-        </div><!-- /.blog-main -->
-	  </div><!-- /row -->
+        </div><!-- /.blog-main - ->
+	  </div><!-- /row - ->
 	</div><!-- /container -->
     <hr>
 
