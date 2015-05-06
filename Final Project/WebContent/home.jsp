@@ -86,7 +86,7 @@
 	    <div class="form-group">
 	      <label for="gab">Your thoughts:</label>
 	      <textarea class="form-control" rows="4" id="gab" name="gab" maxlength="140"></textarea>
-	      <button class="btn btn-lg btn-primary btn-block" type="submit">Post</button>
+	      <button class="btn btn-lg btn-primary" type="submit">Post</button>
 	    </div>
 	  </form>
 	</div>

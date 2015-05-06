@@ -63,12 +63,14 @@
 
 	if(numberOfAccounts > 0) {
 		session.setAttribute("username", username);
+		out.println("<script>location.href = 'home.jsp';</script>");
 %>
 <br><br>
 <a href="home.jsp">Home Page</a>
 <% 	} else {
 		out.write("<br><br>Login failed, try again.<br>");
 		out.write("<a href='login.jsp'>Login Page</a>");
+		out.println("<script>location.href = 'login.jsp';</script>");
 	}
 %>
 </body>
