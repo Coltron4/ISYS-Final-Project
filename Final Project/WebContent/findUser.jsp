@@ -142,7 +142,7 @@
 		following_users = new ArrayList<String>();
 		
 		pstmt  = con.prepareStatement(following_sql);
-		pstmt.setString(1, username);		
+		pstmt.setString(1, username);
 		rs = pstmt.executeQuery();
 		
 		if ( rs != null ) {
@@ -168,16 +168,18 @@
    		if(search_result != null && !search_result.equals(username)) {
 			out.println("<div class=\"blog-post\">");
 			out.println("<p class=\"blog-post-meta\">");
-			out.println(search_result + "</a></p>");
+			out.println(search_result + "</p>");
 			
 			//Follow button or not
 			if(following_users.contains(search_result)) {
-				//button should say "following"
-				out.println("<p>Button here says following</p>");
+				//Label shows user is already followed
+				out.println("<p><span class='label label-success'>Following <span class='glyphicon glyphicon-ok'></span></span></p>");
 			} else {
-				//button should have link to follow
-				out.println("<p>Click imaginary button to follow</p>");
+				//Button allows user to be followed
+				out.println("<form action='followUser.jsp' method='post' role='form'><div class='form-group'><input type='hidden' name='followName' value='"+userQuery+"'/><button class='btn btn-lg btn-primary' type='submit'>Follow <span class='glyphicon glyphicon-user'></span></button></div></form>");
 			}
+   		} else {
+   			out.println("<p>No results found. Try a different search query.");
    		}
  
    		out.println("<p>User Query is: " + userQuery + "</p>");
