@@ -126,7 +126,7 @@
 		rs = pstmt.executeQuery();
 		
 		if ( rs != null ) {
-			if (rs.next()) {
+			while (rs.next()) {
 				following_set.add(rs.getString(2));
 			}
 		}
