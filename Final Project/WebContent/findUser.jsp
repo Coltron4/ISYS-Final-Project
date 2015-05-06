@@ -106,11 +106,11 @@
 	Connection con = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
-	ArrayList<String> following_set = null;
-	ArrayList<Post> posts = null;
+	String search_result = null;
+	ArrayList<String> following_users = null;
 	
-	String following_sql = "SELECT * FROM MAKS202.SOCIAL_FOLLOWINGS WHERE USERNAME = ?";
-	String posts_sql = "SELECT * FROM MAKS202.SOCIAL_POSTS WHERE POSTER_USERNAME = ?";
+	String search_sql = "SELECT * FROM MAKS202.SOCIAL_USERS WHERE USERNAME = ?";
+	String following_sql = "SELECT * FROM MAKS202.SOCIAL_FOLLOWING WHERE USERNAME = ?";
 	String user = "maks202";
 	String password = "axle088";
 	String url = "jdbc:db2://130.184.26.148:446/ZUAF";
@@ -125,9 +125,21 @@
 	try {
 		con = DriverManager.getConnection(url, user, password);
 		
-		// Build list of people followed
-		following_set = new ArrayList<String>();
-		following_set.add(username);
+		// Get user searched for
+		pstmt  = con.prepareStatement(search_sql);
+		pstmt.setString(1, username);		
+		rs = pstmt.executeQuery();
+		
+		if ( rs != null ) {
+			if (rs.next()) {
+				search_result = rs.getString(1);
+			}
+		}
+		
+		out.println("<p>All Users found: " + search_result + "</p>");
+		
+		// Retrieve  people followed
+		following_users = new ArrayList<String>();
 		
 		pstmt  = con.prepareStatement(following_sql);
 		pstmt.setString(1, username);		
@@ -135,34 +147,11 @@
 		
 		if ( rs != null ) {
 			if (rs.next()) {
-				following_set.add(rs.getString(2));
+				following_users.add(rs.getString(2));
 			}
 		}
 		
-		out.println("<p>Following_set size: " + following_set.size() + "</p>");
-		
-		// Retrieve posts from people followed
-		posts = new ArrayList<Post>();
-		
-		// Retrieve posts from each user
-		for(String following_user : following_set) {
-			pstmt = con.prepareStatement(posts_sql);
-			pstmt.setString(1, following_user);
-			
-			rs = pstmt.executeQuery();
-			
-			// Add all posts from user to list
-			while(rs.next()) {
-				Post post = new Post();
-				post.setUsername(rs.getString(1));
-				post.setPost_text(rs.getString(2));
-				post.setPost_date(rs.getDate(3));
-				
-				posts.add(post);
-			}
-		}
-		
-		out.println("<p>Posts size: " + posts.size() + "</p>");
+		out.println("<p>Following Users size: " + following_users.size() + "</p>");
 		
 		con.close();
 		
@@ -176,19 +165,21 @@
     <div class="row">
         <div class="col-md-8 blog-main">
    		<%
-   		if(posts != null) {
-   			Collections.sort(posts);
-   			Collections.reverse(posts);
-   			
-   			// Output each post
-   			for(Post post : posts) {
-   				out.println("<div class=\"blog-post\">");
-   				out.println("<p class=\"blog-post-meta\">");
-   				out.println(post.getPost_date() + " by ");
-   				out.println("<a href=\"#\">" + post.getUsername() + "</a></p>");
-   				out.println("<p>" + post.getPost_text() + "</p></div>");
-   			}
+   		if(search_result != null) {
+			out.println("<div class=\"blog-post\">");
+			out.println("<p class=\"blog-post-meta\">");
+			out.println(search_result + "</a></p>");
+			
+			//Follow button or not
+			if(following_users.contains(search_result)) {
+				//button should say "following"
+				out.println("<p>Button here says following</p>");
+			} else {
+				//button should have link to follow
+				out.println("<p>Click imaginary button to follow</p>");
+			}
    		}
+ 
    		out.println("<p>User Query is: " + userQuery + "</p>");
 	} else {
 		//If a query wasn't present, then don't display users (cuz there aren't any!)
