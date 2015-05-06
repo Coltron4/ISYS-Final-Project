@@ -35,6 +35,9 @@
 		pstmt.execute();
 		con.close();
 		
+		//Set username value in post for session validation
+		session.setAttribute("username", username);
+		
 	} catch(Exception ex) {
 		ex.printStackTrace();
 		out.write("Error doing something in DB2... :( " );
@@ -51,7 +54,7 @@
 <body>
 
 <h1>Your Account Has Been Created!</h1><br>
-<a href="login.jsp">Proceed to Login</a>
+<a href="home.jsp">Proceed to Home</a>
 
 </body>
 </html>
