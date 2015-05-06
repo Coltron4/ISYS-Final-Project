@@ -6,6 +6,7 @@
 <%@ page import="edu.uark.isys.Post" %>
 
 <%
+	//Check to see if logged in
 	String username = (String)session.getAttribute("username");
 	if(username == null || username == "") {
 		%><script>location.replace("login.jsp");</script><%
@@ -54,8 +55,7 @@
           <a class="navbar-brand" href="#">Gabber</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <!-- TODO: Have form go to logout.jsp that resets session variables -->
-          <form class="navbar-form navbar-right" action="login.jsp">
+          <form class="navbar-form navbar-right" action="logout.jsp">
             <div class="form-group">
               <label class="label label-default" for="logout">Logged in as <%=username %></label>
             </div>
@@ -75,17 +75,18 @@
          Click the button below to find more users to follow, or use the message box to keep
          gabbing!</p>
          <!-- TODO: Adjust button below so that it redirects to findUsers.jsp -->
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Find Users &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" href="findUser.jsp" role="button">Find Users &raquo;</a></p>
       </div>
     </div>
     
     <div class="container">
 	  <p>Make your own gab!</p>
 	  <!-- TODO: Have form submit message to database -->
-	  <form role="form">
+	  <form action="savePost.jsp" method="post" role="form">
 	    <div class="form-group">
-	      <label for="comment">Your thoughts:</label>
-	      <textarea class="form-control" rows="4" id="comment" maxlength="140"></textarea>
+	      <label for="gab">Your thoughts:</label>
+	      <textarea class="form-control" rows="4" id="gab" name="gab" maxlength="140"></textarea>
+	      <button class="btn btn-lg btn-primary btn-block" type="submit">Post</button>
 	    </div>
 	  </form>
 	</div>
