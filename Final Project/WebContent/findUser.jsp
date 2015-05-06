@@ -110,7 +110,7 @@
 	ArrayList<String> following_users = null;
 	
 	String search_sql = "SELECT * FROM MAKS202.SOCIAL_USERS WHERE USERNAME = ?";
-	String following_sql = "SELECT * FROM MAKS202.SOCIAL_FOLLOWING WHERE USERNAME = ?";
+	String following_sql = "SELECT * FROM MAKS202.SOCIAL_FOLLOWINGS WHERE USERNAME = ?";
 	String user = "maks202";
 	String password = "axle088";
 	String url = "jdbc:db2://130.184.26.148:446/ZUAF";
@@ -127,7 +127,7 @@
 		
 		// Get user searched for
 		pstmt  = con.prepareStatement(search_sql);
-		pstmt.setString(1, username);		
+		pstmt.setString(1, userQuery);		
 		rs = pstmt.executeQuery();
 		
 		if ( rs != null ) {
@@ -136,7 +136,7 @@
 			}
 		}
 		
-		out.println("<p>All Users found: " + search_result + "</p>");
+		out.println("<p>User found: " + search_result + "</p>");
 		
 		// Retrieve  people followed
 		following_users = new ArrayList<String>();
@@ -165,7 +165,7 @@
     <div class="row">
         <div class="col-md-8 blog-main">
    		<%
-   		if(search_result != null) {
+   		if(search_result != null && !search_result.equals(username)) {
 			out.println("<div class=\"blog-post\">");
 			out.println("<p class=\"blog-post-meta\">");
 			out.println(search_result + "</a></p>");
